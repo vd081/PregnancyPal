@@ -1,0 +1,6 @@
+.DS_Store
+*.sql
+*.db
+dbconnect.php
+/vendor/
+/logs

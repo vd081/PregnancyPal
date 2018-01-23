@@ -1,0 +1,97 @@
+include ("dbConnect.php");
+require 'vendor/autoload.php';
+use Mailgun\Mailgun;
+
+
+
+if(isset($_POST['submit'])){
+
+	if (empty($_POST['FirstName']))
+	{
+		
+		$error[] = 'Please enter your FirstName';
+	}
+
+	else 
+	{
+		$stmt = $db->prepare('SELECT FirstName FROM Profile WHERE FirstName = :FirstName');
+		$stmt->execute(array(':FirstName' => $_POST['FirstName']));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	if(empty($_POST['FirstName']))
+	{
+		$error[] = 'Please enter your first name';
+	}	
+
+	if(strlen($_POST['Password']) < 3){
+		$error[] = 'Password is too short.';
+
+	}
+
+	//EmailAddress validation
+	if(!filter_var($_POST['EmailAddress'], FILTER_VALIDATE_EmailAddress)){
+		$error[] = 'Please enter a valid EmailAddress address';
+	} else {
+		$stmt = $db->prepare('SELECT EmailAddress FROM Profile WHERE EmailAddress = :EmailAddress');
+		$stmt->execute(array(':EmailAddress' => $_POST['EmailAddress']));
+
+		if(!empty($row['EmailAddress'])){
+			$error[] = 'EmailAddress provided is already in use.';
+		}
+		
+	}
+	if(!isset($error)){
+
+		//hash the Password
+		$hashedPassword = $user->Password_hash($_POST['Password'], Password_BCRYPT);
+
+		//create the activasion code
+		$activasion = md5(uniqid(rand(),true));
+
+		try {
+
+			//insert into database with a prepared statement
+			$stmt = $db->prepare('INSERT INTO Profile (FirstName, Password, EmailAddress, Due Date,active) VALUES (:FirstName, :Password, :EmailAddress, :DueDate :active)');
+			$stmt->execute(array(
+				':FirstName' =>$_POST['FirstName'],		
+				':Password' => $hashedPassword,
+				':EmailAddress' => $_POST['EmailAddress'],
+				':active' => $activasion
+				));
+			$id = $db->lastInsertId('userID');
+			
+			
+
+			$mgClient = new Mailgun('key-cd32666ca48645754f5e8f8c60cd2551');
+			$domain = "postmaster@sandbox8ec7e3b7fd4d4a6a90898da855ed31fe.mailgun.org";
+
+# Make the call to the client.
+			$result = $mgClient->sendMessage($domain, array(
+
+
+				'from'    => 'PregnancyPal<noreply@PregnancyPal.co.uk>',
+				'to'      => $_POST['EmailAddress'],
+				'subject' => 'Hello',
+				'text'    => "Thank you for registering at PregnancyPal.\n\n To activate your account, please click on this link:\n\n <a href='".DIR."activate.php?x=$id&y=$activasion\n\n Regards Site Admin \n\n",
+				'html' => "<html>Thank you for registering at Ultimate Drones.\n\n To activate your account, please click on this link: <a href='".DIR."activate.php?x=$id&y=$activasion'>Activate</a><br> Regards Site Admin"
+
+				));
+
+
+			//redirect to index page
+			header('Location: register.php?action=joined');
+			exit;
+
+		//else catch the exception and show the error.
+		} catch(PDOException $e) {
+			$error[] = $e->getMessage();
+		}
+
+	}
+
+}
+
+
+//define page title
+$title = 'PregnancyPal: Register';
