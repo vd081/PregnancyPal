@@ -54,7 +54,7 @@ session_start();
    <div class="submenu">
    <ul class="sf-menu" id="">
 	<?php if(isset($_SESSION['currentUser'])){?>
-		<a href="logout.php"><h2>Logout | </a><?php echo $_SESSION["currentUserForename"]; ?></h2>
+	<li><a href="logout.php">Logout |</a></li> <li><h1><?php echo $_SESSION["currentUserForename"]; ?></h1>
 	<?}else{?>
 		<li><a href="Register.php">Register|</a></li>
 		<li><a href="Login.php"> Login</a></li>

@@ -1,7 +1,8 @@
 <?php
 session_start();
 include("dbConnect.php"); 
-$sessionid = $_SESSION['UserID'];
+header("Location:myProfile.php?")
+$sessionid = $_SESSION['currentUserID'];
 
 $filename = "uploads/profile".$sessionid. "*";
 $fileinfo = glob($filename); //all files matches the search above
@@ -17,7 +18,7 @@ if (!unlink($file)){
 }else{
 	echo "file was deleted!";
 }
-
-header("Location:myProfile.php?deletesuccess")
-
+$stmt = $conn->prepare("UPDATE Profile SET ProfilePicture='{$fileNameNew}' WHERE UserID='{$sessionid}'");
+ $stmt->execute();
+header("Location:myProfile.php?deletesuccess=1")
 ?>

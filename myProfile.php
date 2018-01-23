@@ -42,7 +42,7 @@ ob_start()
 	
    <div class="submenu">
    <ul class="sf-menu" id="">
-		 <li><a href="Register.php">Register|</a></li>
+		 <li><a href="Register.php">Register | </a></li>
 				<li><a href="Login.php"> Login</a></li>
     </div>
 				
@@ -85,6 +85,9 @@ echo "<h1> Upload an image of yourself here!</h1>
 		<input type='file' name='file'>
 		<br><br><button type='submit' name='submit'>Upload photo</button>
  </form>";
+ echo "<form action='deleteProfile.php' method='POST'
+		<br><br><button type='submit' name='submit'>Delete Profile Photo</button>
+ </form>";
 }
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -106,7 +109,7 @@ if (isset($_POST['submit'])){
 	if(in_array($fileActualExt, $allowed)) {
 	if($fileError ===0){
 		if ($fileSize <1000000){
-			$fileNameNew = "profile".$id.".".$fileActualExt;
+	$fileNameNew = "profile".$id.".".$fileActualExt;
 	$fileDestination = 'uploads/'. $fileNameNew;	
 	move_uploaded_file($fileTmpName, $fileDestination);
 	header("Location: myProfile.php?successCode=1");	

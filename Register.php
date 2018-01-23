@@ -4,13 +4,7 @@ include ("dbConnect.php");
 
 
 if(isset($_POST['submit'])){
-
-/*var_dump([$_POST['FirstName'],
-				$_POST['password'],	
-				$_POST['email'],	
-				$_POST['dueDate']]);*/
 	try {
-
 			//insert into database with a prepared statement
 			$stmt = $conn->prepare('INSERT INTO Profile (FirstName, Password,  EmailAddress, DueDate) VALUES (?,  ?, ?, ?)');
 			$stmt->execute(array(
