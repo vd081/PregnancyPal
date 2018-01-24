@@ -17,6 +17,7 @@
 <script src="js/jquery-1.9.0.min.js"></script>
 <script src="js/hoverIntent.js"></script>
 <script src="js/superfish.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
 <script>
 
 		// initialise plugins
@@ -67,34 +68,77 @@
 <div class="wrap2">
 <div class="container">
 <div class="title">
+
 <!---- MAIN SECTION--->
 
       <center><h1>Your Pregnancy Week by Week</h1> 
 	  <h4> all you need to know what's happening with you and your baby</h4></center>
 	  </div>
-	  
-	  
+
+<?php
+
+//Get Week Photo
+$dir_path = "WeekByWeekPhotos/";
+$extensions_array = array('jpg','png','jpeg');
+
+/*
+if(is_dir($dir_path))
+{
+    $files = scandir($dir_path);
+    
+    for($i = 0; $i < count($files); $i++)
+    {
+        if($files[$i] !='.' && $files[$i] !='..')
+        {
+            // get file name
+            echo "File Name -> $files[$i]<br>";
+            
+            // get file extension
+            $file = pathinfo($files[$i]);
+            $extension = $file['extension'];
+            echo "File Extension-> $extension<br>";
+            
+           // check file extension
+            if(in_array($extension, $extensions_array))
+            {
+            // show image
+            echo "<img src='$dir_path$files[$i]' style='width:100px;height:100px;'><br>";
+            }
+        }
+    }
+}
+*/
+
+if(isset($_POST['week'])) {
+	$imageName = $_POST['week'] . ".jpg";
+} else {
+	$imageName = "1.jpg";
+}
+echo "<img src='$dir_path$imageName' style='width:300px;height:300px;'><br>";
+?>
+
 <?php   
  
    include ("dbConnect.php");
-   
- // $weekID=$_GET["WeekID"];
-  // $dbQuery=$conn->prepare("select MotherUpdates, BabyUpdates from WeekByWeek where weekID=:WeekID");
-   //$dbParams = array('weekID'=>$WeekID);
-   // $dbQuery->execute($dbParams);
-  // echo $WeekID."\n";
-   //   echo $dbQuery->rowCount()."\n";
- //  while ($dbRow=$dbQuery->fetch(PDO::FETCH_ASSOC)) {
-   //   echo $dbRow["WeekID"]."_".$dbRow["MotherUpdates"]."_".$dbRow["BabyUpdates"]."\n";
-//   }
   
-// for ($button = 0; $button <=40; $button= $button + 1) {
-       // echo "$button";
-		//echo "<center><button type='button' </center>";
-		
- //}
-	?>
-		
+  $weekID=$_GET["WeekID"];
+   $dbQuery=$conn->prepare("select * FROM WeekByWeek");
+   $dbParams = array('weekID'=>$WeekID);
+   $dbQuery->execute($dbParams);
+  // echo $WeekID."\n";
+      echo $dbQuery->rowCount()."\n";
+   while ($dbRow=$dbQuery->fetch(PDO::FETCH_ASSOC)) {
+   }
+
+  //weeks 1-40 Buttons
+  echo "<form method='POST'>";
+for ($button = 0; $button <=40; $button ++) {
+       //echo "$button";
+		echo "<button type='submit' name='week' value=".$button.">".$button."</button>";
+ }
+
+ ?>
+ </form>
 	 
     </body>
 
@@ -109,11 +153,26 @@
   <div class="container">
     <div class="title">
       <h2>What's happening with your baby!</h2>
- 
       </div>
       <div class="content">
      
-	   <? echo $week; ?>
+		<?php 
+			if(isset($_POST['week'])){
+				//var_dump('SUBMITTED');
+				$value = $_POST['week'];
+				$dbQuery = $conn->prepare("SELECT BabyUpdates, MotherUpdates FROM WeekByWeek WHERE WeekID =".$value);
+				$dbQuery->execute($dbParams);
+				
+				$dbQuery->rowCount()."\n";
+			   while ($dbRow=$dbQuery->fetch(PDO::FETCH_ASSOC)) {
+				  echo $dbRow["BabyUpdates"];
+				  $motherUpdates = $dbRow["MotherUpdates"];
+				   
+			   }
+			}else{
+				var_dump('NOT SUBMITTED');
+			}		
+		?>
 
     </div>
 
@@ -128,12 +187,12 @@
  
       </div>
       <div class="content">
-       <i> information here</i>
+       <? echo $motherUpdates; ?>
 
     </div>
 
 
-    </div>
+    </div><br>
 <!---FOOTER --->
 
 <div class="wrap3">
