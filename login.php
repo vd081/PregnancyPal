@@ -1,6 +1,4 @@
 <?php
-	error_reporting(E_ALL ^ E_DEPRECATED);
-	
    session_start();
    
    unset($_SESSION["currentUser"]);
@@ -94,15 +92,21 @@
       </ul>
     </div>
   </div>
+
   <div class="clearing"></div>
 </div>
+
 <div class="clearing"></div>
+
 </div>
+
 <!---MAIN SECTION--->
 
 <div class="wrap2">
 <div class="container">
+
 <div class="title">
+
       <h1><center>Login!</h1></center>
 	  </div>
 	  
@@ -110,19 +114,26 @@
 //ErrorMessage
    if (isset($_GET["failCode"])) {
       if ($_GET["failCode"]==1)
-         echo "<h3>Incorrect email or password entered, please try again</h3>"; 
+         echo "<center><h3>Incorrect email or password entered, please try again</h3></center>"; 
    }      
 ?>             
 
+  <?php if(isset($_GET['action']) && $_GET['action'] == 'joined'){
+    						echo "<center><h4>Registration Successfull ↓</h4></center>";
+}
+if(isset($_GET['action']) && $_GET['action'] == 'reset'){
+    						echo "<center><h4>Password Reset Successfull. Please Log in</h4></center>";
+}
+?>
 <form name="login" method="post" action="login.php">
           <div class="contact-form mar-top30">
             <label> <span></span>
 			<i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
-            <input type="text" class="input_text" name="EmailAddress" id="emailAddress" placeholder="Email Address" tabindex="2">
+            <input type="text" class="input_text" name="EmailAddress" id="emailAddress" placeholder="Email Address" tabindex="2" required >
             </label>
             <label> <span></span>
 			<i class="fa fa-key fa-2x" aria-hidden="true"></i>
-            <input type="password" class="input_text" name="Password" placeholder="Password" id="password" tabindex="3">
+            <input type="password" class="input_text" name="Password" placeholder="Password" id="password" tabindex="3" required>
             </label>
 		<i><center><a href="forgotPassword.php">Forgot Password?</a></li></center></i>
 		   <br></br>
@@ -131,38 +142,18 @@
           </div>
         </form>
 		<br>
- <center> New to PregnancyPal?<div input type="button" class="button-form"><a href="Register.php">Register Now</a></li></center>
-
+ <center> New to PregnancyPal?<br><br><div input type="button" class="button-form"><a href="Register.php">Register Now</a></li></center>
+<br><br><br><br><br><br><br><br><br>
 </div>
  </div>
   <div class="clearing"></div>  
   </div>
   <div class="clearing"></div>
 </div>
-
-<!---FOOTER --->
-<div class="wrap3">
-<div class="container">
-  <div class="footer">
-
-
-      <h1>Follow us</h1>
-	  
-	<a href="https://www.facebook.com/pregnancy.pal.39"><img src="E:\Final Year\Project\PregnancyPal\PregnancyPal\images\twitter.png" /></a>
-					<img src="U:\Project\PregnancyPal\images\twitter.png" id="Twitter"></a>
-
-				
-					<a href="https://twitter.com/PregnancyPal" id="facebook"></a>
-		
-				
-	<div class="clearing"></div>
-</div>
-</div>
-<div class="shadows2">
-</div>
 </body>
 </html>
 
 <?php
+include_once 'footer.php';
 }
 ?>

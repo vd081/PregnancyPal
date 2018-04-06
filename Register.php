@@ -1,23 +1,86 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 include ("dbConnect.php");
 
 
 if(isset($_POST['submit'])){
+
+//Register Form Validation
+//FirstName required
+if (empty($_POST['firstname']))
+	{
+		
+		$error[] = 'Please enter your forename';
+	}
+	else 
+	{
+		$stmt = $conn->prepare('SELECT FirstName FROM Profile WHERE FirstName = :firstname');
+		$stmt->execute(array(':firstname' => $_POST['firstname']));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+//Ensure Password isnt less than 3 characters
+
+if(strlen($_POST['Password']) < 3){
+		$error[] = 'Password is too short.';
+	}
+		else 
+	{
+		$stmt = $conn->prepare('SELECT Password FROM Profile WHERE Password = :Password');
+		$stmt->execute(array(':Password' => $_POST['Password']));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+	
+	//email validation
+	if(!filter_var($_POST['EmailAddress'], FILTER_VALIDATE_EMAIL)){
+		$error[] = 'Please enter a valid email address';
+	} else {
+		$stmt = $conn->prepare('SELECT EmailAddress FROM Profile WHERE EmailAddress = :EmailAddress');
+		$stmt->execute(array(':EmailAddress' => $_POST['EmailAddress']));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if(!empty($row['email'])){
+			$error[] = 'Email provided is already in use.';
+		}
+		
+	}
+	
+//Ensure Due Date is entered
+
+if (empty($_POST['DueDate']))
+	{
+		
+		$error[] = 'Please enter your due date';
+	}
+
+	else 
+	{
+		$stmt = $conn->prepare('SELECT DueDate FROM Profile WHERE DueDate = :DueDate');
+		$stmt->execute(array(':DueDate' => $_POST['DueDate']));
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+if(!isset($error)){
+	
 	try {
+
 			//insert into database with a prepared statement
-			$stmt = $conn->prepare('INSERT INTO Profile (FirstName, Password,  EmailAddress, DueDate) VALUES (?,  ?, ?, ?)');
+			$stmt = $conn->prepare('INSERT INTO Profile (FirstName, Password,  EmailAddress, DueDate) VALUES (:firstname, :Password, :EmailAddress, :DueDate)');
 			$stmt->execute(array(
-				$_POST['FirstName'],
-				$_POST['password'],	
-				$_POST['email'],	
-				$_POST['dueDate']	
+				':firstname' =>$_POST['firstname'],
+				':Password' => $_POST['Password'],	
+				':EmailAddress' => $_POST['EmailAddress'],	
+				':DueDate' => $_POST['DueDate']	
 				));
+				
+				
 		//$UserID = $conn->lastInsertId('UserID');
 			ob_start();
 			//redirect to index page
 			
-			echo'<script>window.location = "index.php?action=joined";</script>';
+			echo'<script>window.location = "login.php?action=joined";</script>';
 			//header("Location: index.php?action=joined");
 			exit;
 
@@ -26,12 +89,9 @@ if(isset($_POST['submit'])){
 			$error[] = $e->getMessage();
 		}
 
-		//if action is joined show sucess
-    					//if(isset($_GET['action']) && $_GET['action'] == 'joined'){
-    						//echo "<h2>Registration successful</h2>";
 	
+}
 	}
-
  	
 ?>
 
@@ -39,7 +99,7 @@ if(isset($_POST['submit'])){
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Home | PregnancyPal</title>
+	<title>Register | PregnancyPal</title>
 	
 <link href="css/styles.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
@@ -107,62 +167,51 @@ if(isset($_POST['submit'])){
       <h1><center>Register Now!</h1></center>
 	  </div>
 
-
+<?php
+//check for any errors
+    					if(isset($error)){
+    						foreach($error as $error){
+    							echo '<center><h4>'.$error.'</h4></center>';
+    						}
+    					}
+?>
 
 <form method="POST">
           <div class="contact-form mar-top30">
             <label> <span></span>
 			<i class="fa fa-user fa-2x" aria-hidden="true"></i>
-            <input type="text" class="input_text"  name="FirstName" id="FirstName" placeholder="First Name" tabindex="1">
+			
+            <input type="text" class="input_text"  name="firstname" id="FirstName" placeholder="First Name" value="<?php if(isset($error)){ echo $_POST['firstname']; } ?>"
             </label>
             <label> <span></span>
 			<i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
-            <input type="text" class="input_text" name="email" id="email" placeholder="Email Address" tabindex="2">
+            <input type="text" class="input_text" name="EmailAddress" id="EmailAddress" placeholder="Email Address"  value="<?php if(isset($error)){ echo $_POST['EmailAddress']; } ?>" tabindex="2">
             </label>
             <label> <span></span>
 			<i class="fa fa-key fa-2x" aria-hidden="true"></i>
-            <input type="password" class="input_text" name="password" placeholder="Password" id="subject" tabindex="3">
+            <input type="password" class="input_text" name="Password" placeholder="Password" value="<?php if(isset($error)){ echo $_POST['Password']; } ?>" tabindex="3">
             </label>
             <label> <span></span>
 			<i class="fa fa-calendar fa-2x" aria-hidden="true" "Due Date"></i>
-           <input type="date" class="input_text" name="dueDate" placeholder="Due Date" id="subject" tabindex="4">
-		   <br></br>
+           <input type="date" class="input_text" name="DueDate" placeholder="Due Date" value="<?php if(isset($error)){ echo $_POST['DueDate']; } ?>" tabindex="4">
+		   <br></br><br>
 		   <input type="submit" name="submit" value="Register" class="button-form" tabindex="5">
 
 		
             </label>
           </div>
         </form>
-
+<br><br><br><br><br><br><br><br>
 </div>
-
 
     </div>
   <div class="clearing"></div>  
   </div>
   <div class="clearing"></div>
 </div>
-
-<!---wrap4--->
-<div class="wrap3">
-<div class="container">
-  <div class="footer">
-
-
-      <h1>Follow us</h1>
-	  
-	<a href="https://www.facebook.com/pregnancy.pal.39"><img src="E:\Final Year\Project\PregnancyPal\PregnancyPal\images\twitter.png" /></a>
-					<img src="U:\Project\PregnancyPal\images\twitter.png" id="Twitter"></a>
-
-				
-					<a href="https://twitter.com/PregnancyPal" id="facebook"></a>
-		
-				
-	<div class="clearing"></div>
-</div>
-</div>
-<div class="shadows2">
-</div>
+<?php
+include_once 'footer.php';
+?>
 </body>
 </html>
 </html>

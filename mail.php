@@ -1,0 +1,1 @@
+<?php mail('victoriad081@hotmail.co.uk','Subject of the e-mail','This is the body of the e-mail!'); ?>

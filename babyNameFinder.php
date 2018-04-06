@@ -1,4 +1,9 @@
+<?php
+ session_start();
+  if (!isset($_SESSION["currentUser"])) 
+     header("Location: login.php");
 
+?>
 <!DOCTYPE html PUBLIC">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,18 +16,17 @@
 <!----menu--->
 <link rel="stylesheet" href="css/superfish.css" media="screen">
 <script src="js/jquery-1.9.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="js/hoverIntent.js"></script>
 <script src="js/superfish.js"></script>
 <script>
-
 		// initialise plugins
 		jQuery(function(){
 			jQuery('#example').superfish({
 				//useClick: true
 			});
 		});
-
-		</script>
+</script>
 </head>
 
 <body>
@@ -31,8 +35,8 @@
 <div class="container">
   <div class="header">
 
-		<a href="index.html" class="logo">
-			<center><img src="images/logo.png" alt="Logo"></center>
+		<a href="index.php" class="logo">
+			<center><img src="images/logo.png" alt="Logo"> </center>
     <div class="logo">
 	</div>
    <div class="submenu">
@@ -61,7 +65,6 @@
 <div class="container">
 <div class="title">
       <center><h2>Having trouble thinking of baby names? </h2><h3><br>Why not try our baby name finder to help you!</br></h3> 
-
 	  </div>	 </center>
 </div>
 </div>
@@ -70,77 +73,123 @@
   <div class="container">
     <div class="leftcol">
       <div class="title">
-
+<u><h1>Search baby names by letter</h1></u>
       </div>
       <div class="page-content">
       <div class="panel borderbotm-none">
         <div class="content">
-         <u><h2>Search baby names</h2></u>
+         
 	 <div class="contact-form mar-top30">
-<i>Gender</i>
-<br> <br>
- <input type="radio" name="gender" value="Boy"> Boy
-  <input type="radio" name="gender" value="Girl">Girl
-  <input type="radio" name="gender" value="Both">Both<br><br>
-  </div>
-  
-<select name="Letters A-Z">
-
+	 <center>
 <?php
+
+  session_start();
+   include("dbConnect.php");
+   error_reporting(E_ALL);
+ini_set('display_errors', 1);
+   
+   if(isset($_SESSION['currentUserID'])){
+   
+   $letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+for ($i=0; $i<=25; $i++) {
+    $letter=substr($letters,$i,1);
+    if ($i)
+        echo " | ";
+    echo "<a href='babyNameFinder.php?initial=$letter'>$letter</a> ";
+}
+   echo "</div><br><hr></br>";
+   
+   echo "<div class='bigMargin'>";
+  if(isset($_GET["initial"])) {
+  $initial=$_GET["initial"];
+  $dbQuery=$conn->prepare("select * from BabyNames where babyNames like :initial");
+  $initial=$initial.'%';
+  $dbParams=array('initial'=>$initial);
+  $dbQuery->execute($dbParams);
 	
-for ($letter= 'A'; $letter <= 'Z'; $letter++) {
-    echo $letter . "\n";
+	  
+  $arr = array();
+  $count = 0;
+  while($dbRow = $dbQuery->fetch(PDO::FETCH_ASSOC)) {
+    if($dbRow['gender'] === 'B') { $arr['BoysName'][] = $dbRow['babyNames']; }
+    elseif($dbRow['gender'] === 'G') { $arr['GirlsName'][] = $dbRow['babyNames']; }
+    $count++;
+  }
+ 
+  echo '<style type="text/css">
+.tableBG {
+  border:1;
+  width:400px;
+}
+.tableBG th, .tableBG td {
+  border:2px solid white;
+
+}
+.tableBG td.noBorder {
+  border:0;
 }
 
+</style>
+
+<center>
+<table class="tableBG">
+<tr>
+<th>Boy Names</th>
+<th>Girls Names</th>
+</tr>';
+
+   $i = 0;
+  while($i < $count) {
+    echo '<tr>';
+    if(isset($arr['BoysName'][$i])) { echo '<td>'. $arr['BoysName'][$i] . '<button style="text-align:right;float:right;" class="favourites"  id="' . $arr['BoysName'][$i] . '" value="' . $dbRow["UserID"] .'<span style="font-size:150%;color:red;">❤️</span></div></button></td>'; }
+    else{ echo '<td class="noBorder">&nbsp;</td>'; }
+    if(isset($arr['GirlsName'][$i])) { echo '<td>'.$arr['GirlsName'][$i] . '<button style="text-align:right;float:right;" class="favourites" id="'  . $arr['GirlsName'][$i] . '" value="' . $dbRow["UserID"] . $dbRow["nameID"] .'<span style="font-size:150%;color:red;">❤️</span></div></button></td>'; }
+    else{ echo '<td class="noBorder">&nbsp;</td>'; }
+    echo '</tr>';
+    $i++;
+  }
+  echo '</table></center>';
+  }
+   }
 ?>
 
-<input type="radio" name="gender" value="all">All
+<script>
 
-       <br><div input type="button" class="button-form"><a href='#' onclick=\"button"('$letter')\">$Search</div>
-
-  <br><br>
-  <br><h2>Results</h2>
-  
-	  <select name="Search By">
+$(document).ready(function() {
+    $("button[class='favourites']").click(function(e) {  
+		e.preventDefault();
 	 
-<option value=""><h3>Search By</h3></option>
-  <option value="A">A</option></select>
+	  var nameID = $(this).prop('id');  
+	  var UserID = '<?php echo ($_SESSION['currentUserID'])?>';
+	  
+$.ajax({
+  method: 'POST',
+  url: 'insert.php',
+  data: {nameID:nameID, UserID:UserID},
+  success: function(data) {
+    $('.favourites').html(data)
+	 alert("baby name was successfully added to your favourites!");
+  }
+  	 
+});
+});
+});
+
+</script>
+		
+
+<br> <br>
+
+
+</select>
+
+
+  </div>
+  </form>
+
 </form>
 
  </div>
- 	  <?php
-   include("dbConnect.php");
-   
-   $letters="abcdefghijklmnopqrstuvwxyz";
-   echo "<div class='bigMargin'>";
-      echo "<span class=\"bold\">Search By: </span>";
-   for ($i=0; $i<=35; $i++) {
-      $letter=substr($letters,$i,1);
-      echo "<a href='babyNameFinder.php?initial=$letter'>$letter</a> ";
-   }  
-   echo "</div>";
-   
-   echo "<div class='bigMargin'>";
-   if (isset($_GET["initial"])) {
-      $initial=$_GET["initial"];
-      $dbQuery=$conn->prepare("select * from BabyNames where GirlNames like :initial order by GirlNames asc");
-      $initial=$initial.'%';
-      $dbParams=array('initial'=>$initial);
-      $dbQuery->execute($dbParams);
-      echo "<ul>";
-      while ($dbRow = $dbQuery->fetch(PDO::FETCH_ASSOC)) {
-		      echo "<a href='#,' onclick=\"listBabyNames('$babyName')\">$letter</a> ";
-         $babyName=$dbRow["GirlNames"];
-		 echo "<table border='1' width='5%' rows=''2";
-         echo "<p><li>$babyName</li></p>";
-      }
-      echo "</ul>";
-   } else {
-      
-   }
-   echo "</div>";      
-?>
- 
       </div>
       </div>
     </div>
@@ -148,17 +197,19 @@ for ($letter= 'A'; $letter <= 'Z'; $letter++) {
 
     <div class="rightcol">
       <div class="title">
+	  <u><h1>Still Unsure?</h1></u>
       </div>
+	  
       <div class="panel">
         <div class="content">
           <ul>
-            <div class="banner"> <img src="images/baby_names.jpg" alt="baby_names.jpg"    />
+            <div class="banner"> <center><img src="images/baby_name_finder.jpg" alt="image"  /></center>
     <div class="banner-shadows"></div>
     </div>
 	     <br><br>
 	 <br><br>
 	 <br><br>
-    <div class="service mar-right40"> <img src="images/baby_names2.jpg" alt="image" />
+    <div class="service mar-right40"> <center><img src="images/baby_names.jpg" alt="image" />
       <div class="shadows"></div>
       </div>
 <center>
@@ -175,15 +226,8 @@ for ($letter= 'A'; $letter <= 'Z'; $letter++) {
   <div class="clearing"></div>  
   </div>
 </div>
-<!---wrap4--->
-<div class="wrap3">
-<div class="container">
-  <div class="footer"> Copyright (c) websitename. All rights reserved.<a href="www.alltemplateneeds.com" target="_blank"> < www.alltemplateneeds.com ></a><br />
-    <span>Image courtesy .</span><a href="www.photorack.net" target="_blank" class="active"> www.photorack.net</a> </div>
-<div class="clearing"></div>
-</div>
-</div>
-<div class="shadows2">
-</div>
-</body>
+<!--- FOOTER --->
+<?php
+include_once 'footer.php';
+?>
 </html>

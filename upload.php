@@ -41,7 +41,14 @@ if (isset($_POST['submit'])){
   	$stmt = $conn->prepare("UPDATE Profile SET ProfilePicture='{$fileName}' WHERE UserID='{$_SESSION ['currentUserID']}'");
      $stmt->execute();
  }
-?>
+
+
+if(isset($_POST['submit'])) {
+	echo "<img src='uploads/profile".$id.".jpg'>";
+} else {
+	echo "<img src='uploads/defeault-profile".jpg'>";
+}
+<?
 
 <?php
 //SuccessMessage

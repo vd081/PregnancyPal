@@ -1,4 +1,10 @@
 <?php
+ session_start();
+  if (!isset($_SESSION["currentUser"])) 
+     header("Location: login.php");
+
+?>
+<?php
 ob_start()
 ?>
 <html>
@@ -42,7 +48,7 @@ ob_start()
 	
    <div class="submenu">
    <ul class="sf-menu" id="">
-		 <li><a href="Register.php">Register | </a></li>
+		 <li><a href="Register.php">Register|</a></li>
 				<li><a href="Login.php"> Login</a></li>
     </div>
 				
@@ -80,7 +86,7 @@ session_start();
 include("dbConnect.php"); 
 
 if(isset($_SESSION ['currentUserID'])){ 
-echo "<h1> Upload an image of yourself here!</h1>
+echo "<h4><b><u> Upload an image of yourself here!</h4></u></b><br>
 	 <form action='myProfile.php' method='POST' enctype='multipart/form-data'>
 		<input type='file' name='file'>
 		<br><br><button type='submit' name='submit'>Upload photo</button>
@@ -137,17 +143,33 @@ while($image =$stmt->fetch(PDO::FETCH_ASSOC)) {
 echo "<img src=uploads/".$image['ProfilePicture']."' width='150' height='150'/>";
 $profileimage = $image['ProfilePicture'];
 }
+
+//get favourite baby names
+ 
+
+$stmt = $conn->query('SELECT nameID FROM favourites WHERE UserID='.$_SESSION ['currentUserID']);
+while($FavName =$stmt->fetch(PDO::FETCH_ASSOC)) {
+$name = $FavName['nameID'];
+
+}
+
 ?>
 </div>
  <!-- USER DETAILS DISPLAYED -->
 	  <pre id="tab1">
-<h3>First Name:<u><?php echo $_SESSION["currentUserForename"]; ?><br><br></h3></u>
-<h3>Email Address: <u><?php echo $_SESSION["currentUser"]; ?><br><br><h3></u>
-<h3>Due Date: <u><?php echo $_SESSION["currentUserDueDate"];?><br><br></h3></u>
-<h3>Points: </h3>
+<h4><b>First Name:</b><u><?php echo $_SESSION["currentUserForename"]; ?><br><br></h4></u>
+<h4><b>Email Address: </b><u><?php echo $_SESSION["currentUser"]; ?><br><br><h4></u>
+<h4><b>Due Date:</b> <u><?php echo $_SESSION["currentUserDueDate"];?><br><br></h4></u>
+<h4><b>Favourite Baby Names:</b> <u><?php echo $name ;?><br><br></h4></u>
+<h4><b>Points: </b></h4>
 </div>
-</div>
-
+<br>
+<br>
+<br><br><br><br><br><br><br><br><br><br><br>
+<br>
+<br>
+<br>
+<br>
 
   <div class="clearing"></div>  
   </div>
@@ -155,23 +177,10 @@ $profileimage = $image['ProfilePicture'];
 </div>
 
 <!--- FOOTER --->
-<div class="wrap3">
-<div class="container">
-  <div class="footer">
-      <h1>Follow us</h1>
-	  
-	<a href="https://www.facebook.com/pregnancy.pal.39"><img src="" /></a>
-					<img src="" id="Twitter"></a>
-
-				
-					<a href="https://twitter.com/PregnancyPal" id="facebook"></a>
-		
-				
-	<div class="clearing"></div>
-</div>
-</div>
-<div class="shadows2">
-</div>
+<?php
+include_once 'footer.php';
+?>
+</html>
 </body>
 </html>
 </html>

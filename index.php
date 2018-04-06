@@ -1,16 +1,11 @@
-
-<?php if(isset($_GET['action']) && $_GET['action'] == 'joined'){
-    						echo "<h3>Registration successful</h3>";
-}
-?>
-
 <?php
 session_start();
  if (isset($_SESSION["currentUser"])) { 
 		 $dbParams = array('userID'=>$_SESSION["currentUserForename"]);
 		  $dbParams = array('userID'=>$_SESSION["currentUserDueDate"]);
  }
-//var_dump($_SESSION["currentUserForename"]);
+  if (!isset($_SESSION["currentUser"])) 
+     header("Location: login.php");
 
 ?>
 
@@ -47,8 +42,8 @@ session_start();
 <div class="container">
   <div class="header">
 
-		<a href="index.html" class="logo">
-			<center><img src="images/logo.png" alt="Logo"></center>
+		<a href="index.php" class="logo">
+			<center><img src="images/logo.png" alt="Logo"> </center>
     <div class="logo">
 	</div>
    <div class="submenu">
@@ -82,6 +77,10 @@ session_start();
 <div class="container">
 <div class="title">
 
+<?php if(isset($_GET['action']) && $_GET['action'] == 'joined'){
+    						echo "<i><h2>Registration successful</h2>";
+}
+?>
       <h1>Welcome to PregnancyPal  <?php echo $_SESSION["currentUserForename"]; ?></a></h1>
 	 
 
@@ -103,7 +102,7 @@ session_start();
 </div>
 </div>
 
-<!---wrap3--->
+
 <div class="wrap1 ">
   <div class="container">
     <div class="title">
@@ -142,7 +141,7 @@ session_start();
       
       </div>
       <div class="content">
-            <p><b>Emily Skye On Being Pregnant for the First Time: 'I Feel Like a Superhero' </p></b>
+           <h2>Emily Skye On Being Pregnant for the First Time: 'I Feel Like a Superhero' </h2>
 			<br>
 			<p> Australian trainer Emily Skye doesn't BS her nearly 13 million social-media followers about pregnancy. She's full of body confidence—but it's not a glow-fest.</p>
   <center><br><div input type="button" class="button-form"><a href="https://www.fitpregnancy.com/parenting/celebrity/emily-skye-on-being-pregnant-for-the-first-time-i-feel-like-a-superhero">Read More </a></div>
@@ -153,24 +152,7 @@ session_start();
   </div>
   <div class="clearing"></div>
 </div>
-
-<!---wrap4--->
-<div class="wrap3">
-<div class="container">
-  <div class="footer">
-      <h2 align="right">Follow us</h2>
-	
-	
-					<a href="https://www.facebook.com/pregnancy.pal.39"><img src="E:\Final Year\Project\PregnancyPal\PregnancyPal\images\twitter.png" id="twitter"> </a>
-
-				
-					<a href="http://freewebsitetemplates.com/go/facebook/" id="facebook"></a>
-		
-				
-	<div class="clearing"></div>
-</div>
-</div>
-<div class="shadows2">
-</div>
-</body>
-</html>
+<!--- FOOTER --->
+<?php
+include_once 'footer.php';
+?>

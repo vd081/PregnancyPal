@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("dbConnect.php"); 
-header("Location:myProfile.php?")
+ header("Location:myProfile.php")
 $sessionid = $_SESSION['currentUserID'];
 
 $filename = "uploads/profile".$sessionid. "*";
@@ -20,5 +20,7 @@ if (!unlink($file)){
 }
 $stmt = $conn->prepare("UPDATE Profile SET ProfilePicture='{$fileNameNew}' WHERE UserID='{$sessionid}'");
  $stmt->execute();
-header("Location:myProfile.php?deletesuccess=1")
+
+echo "<img src='uploads/default-profile.jpg' width='150' height='150'/>";
+ header("Location:myProfile.php?deletesuccess=1")
 ?>
