@@ -1,8 +1,9 @@
 <?php
    session_start();
-   
    unset($_SESSION["currentUser"]);
    unset($_SESSION["currentUserID"]);
+
+date_default_timezone_set('Europe/London');
 
    if (isset($_POST["login"])) {
 
@@ -20,7 +21,13 @@
             $_SESSION["currentUserID"]=$dbRow["UserID"];
 			$_SESSION["currentUserForename"]=$dbRow["FirstName"];
 			$_SESSION["currentUserDueDate"]=$dbRow["DueDate"];
-      header("Location: index.php");    
+			$_SESSION["currentUserLastActive"]=$dbRow["LastActive"];
+      header("Location: index.php");   
+	$stmt = $conn->prepare('UPDATE Profile SET LastActive =:LastActive WHERE UserID=:UserID');
+    $dbParams = array(':LastActive'=> date("Y-m-d H:i:s"), 
+	':UserID'=>$dbRow["UserID"]);
+    $stmt->execute($dbParams);
+   
          }//ifPassword
       }//email
 	  else 
@@ -30,6 +37,7 @@
    }//ifLogin 
    else 
    {
+	 
 ?>
 <html>
 

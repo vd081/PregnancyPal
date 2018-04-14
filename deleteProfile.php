@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("dbConnect.php"); 
- header("Location:myProfile.php")
+ header("Location:myProfile.php");
 $sessionid = $_SESSION['currentUserID'];
 
 $filename = "uploads/profile".$sessionid. "*";

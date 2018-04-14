@@ -193,12 +193,11 @@ catch(PDOException $error)
 	
  <h1>Question 4 - Snacks</h1><br></br>
   <h4> What types of food do you like to eat for Snacks?</h4><br>
-	  <input type="checkbox" name="S1" value="">
-  <input type="checkbox" name="S2" value="Fruit">Fruit
-  <input type="checkbox" name="S3" value="Yogurt" >Yogurt
-  <input type="checkbox" name="S4" value="Smoothie">Smoothie
-  <input type="checkbox" name="S5" value="Crackers">Crackers
-  <input type="checkbox" name="S6" value="Walnuts" >Nuts
+  <input type="checkbox" name="S1" value="Fruit">Fruit
+  <input type="checkbox" name="S2" value="Yogurt" >Yogurt
+  <input type="checkbox" name="S3" value="Smoothie">Smoothie
+  <input type="checkbox" name="S4" value="Crackers">Crackers
+  <input type="checkbox" name="S5" value="Walnuts" >Nuts
   <input type="checkbox" name="S6" value="Biscuits" >Biscuits
   
   </br>

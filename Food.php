@@ -70,8 +70,7 @@
 	 </center>
 	  </div>
 <?php if(isset($_GET['action']) && $_GET['action'] == 'Posted'){
-    						echo "<i><center><h4>Thanks for completing the questionnaire! Pick any of the categories below to get started!</center></h4>
-			</h2>";
+    						echo "<center><h4>Thanks for completing the questionnaire! Pick any of the categories below to get started!</center></h4>";
 }
 			else {
 				 echo'<h4><center> ..but first click  <a href="FoodQuestionnaire.php"><b> HERE</b> </a> to complete the questionnaire so we can give you reccomdations suitable to you ! </h4></center>';
@@ -96,11 +95,11 @@
 <div class="wrap 5">
 <div class="container" >
 
-<center><i>
+<center><i><p>
 Without a doubt, a nutritious, well-balanced eating plan can be one of the greatest gifts you give to your developing baby. Pregnancy nutrition is essential to a healthy baby. Ideally, adopting a healthy eating plan before pregnancy is best. <br>
 No matter how many weeks are left on your countdown calendar, it’s never too late to start! Supplying your own body with a tasty blend of nutritious foods can improve your fertility, keep you feeling healthy during pregnancy, and pave the way for an easier labor. <br>
 Pregnancy is the one time in your life when your eating habits directly affect another person. Your decision to incorporate delicious vegetables, whole grains and legumes, lean protein, and other wise food choices into your eating plan before and during pregnancy will give your baby a strong start in life.
-</center>
+</center></p>
 <br></i>
 <div class="clearing"></div>
 <h4><center> ↓ Rules!  ↓</h4></center>
@@ -113,17 +112,19 @@ Once you complete the questionnaire, you can select any section you like! You wi
 However, there is a twist. The quicker you complete the recipe, the more points you will receive. The point system will work as follows: <br>
 
 If completed within:<br><br>
--	1 day: 50pts <br>
--	2 days: 40pts<br>
--	3 days: 30pts<br>
+-	1 day: 40pts <br>
+-	2 days: 30pts<br>
+-	3 days: 25pts<br>
 -	4 days: 20pts<br>
 -	5 days: 15pts<br>
 -	6 days: 10pts<br>
 -	7 days: 5pts <br><br>
 
+
+
 If you do not complete the recipe within this time, you will get 0 points. <br>
 
-If you reach 60 POINTS, within all the sections, another amazing recipe will be released for you to try!
+If you reach 80 POINTS, within all the sections, another amazing recipe will be released for you to try!
 
 </div>
 

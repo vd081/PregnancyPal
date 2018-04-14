@@ -15,6 +15,7 @@ if (empty($_POST['firstname']))
 		
 		$error[] = 'Please enter your forename';
 	}
+
 	else 
 	{
 		$stmt = $conn->prepare('SELECT FirstName FROM Profile WHERE FirstName = :firstname');
@@ -92,6 +93,11 @@ if(!isset($error)){
 	
 }
 	}
+	//Insert user into UserPoints table to set up points
+	$dbQuery=$conn->prepare("insert into FoodPoints ( UserID ) values ( :UserID) "); 
+			$dbParams = array(
+			':UserID'=>$UserID);
+			$dbQuery->execute($dbParams);
  	
 ?>
 

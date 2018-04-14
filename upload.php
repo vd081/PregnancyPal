@@ -5,6 +5,11 @@ ini_set('display_errors', 1);
 session_start();
 include("dbConnect.php");  
 
+if(empty($_POST['submit'])){
+    $file = "default-avatar.jpeg";
+    echo "No<br>";  
+	
+
 $id =$_SESSION['currentUserID'];
 	
 if (isset($_POST['submit'])){
@@ -49,11 +54,3 @@ if(isset($_POST['submit'])) {
 	echo "<img src='uploads/defeault-profile".jpg'>";
 }
 <?
-
-<?php
-//SuccessMessage
-   if (isset($_GET["successCode"])) {
-      if ($_GET["successCode"]==1)
-         echo "<h2>Profile Picture uploaded!</h2>"; 
-   }      
-?>    

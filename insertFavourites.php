@@ -3,14 +3,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
  include("dbConnect.php");
 
- // Insert record
- $stmt = $conn->prepare("UPDATE Profile(answerid) SET FavNames VALUES(:answerid)' WHERE UserID='{$_SESSION ['currentUserID']}'");
-  $stmt->execute();
- }
 $query = "INSERT INTO Profile(answerid) SET FavNames VALUES (:answerid) WHERE UserID='{$_SESSION ['currentUserID']}'");
  $stmt = $conn->prepare($query);
  $stmt->execute(
-
+ array(
  'answerid' => $_POST["answerid"]
  )
  );

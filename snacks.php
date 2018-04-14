@@ -11,7 +11,7 @@ header("Location: login.php");
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Breakfast | PregnancyPal
+    <title>Snacks | PregnancyPal
     </title>
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <link href='http://fonts.googleapis.com/css?family=Economica' rel='stylesheet' type='text/css'>
@@ -107,7 +107,7 @@ header("Location: login.php");
               <div class="title">
                 <!---- MAIN SECTION--->
                 <center>
-                  <h1>Breakfast Reccomendations for you
+                  <h1>Snacks Reccomendations for you
                   </h1> 
                 </center>
               </div>
@@ -190,30 +190,26 @@ $daysLeft = ceil($Days - $daysDiff);
 echo "<div class='countholder'>You currently have  ".$daysLeft." days to complete a recipe!</div>"; // how many day user has left to complete recipe
 
 // ACTION WHEN USER HAS 0 DAYS LEFT TO COMPLETE Recipe
-$dbQuery = $conn->prepare("select BPoints, BreakfastReward from FoodPoints where UserID=:UserID");
+$dbQuery = $conn->prepare("select SPoints, SnacksReward from FoodPoints where UserID=:UserID");
 $dbParams = array(':UserID'=>$UserID);
  $dbQuery->execute($dbParams);
 $dbRow = $dbQuery->fetch(PDO::FETCH_ASSOC);
-    $bpoints          = $dbRow['BPoints']; //define points 
- $breward         = $dbRow['BreakfastReward']; // define BreakfastReward
+    $spoints          = $dbRow['SPoints']; //define points 
+ $sreward         = $dbRow['SnacktReward']; // define SnacksReward
 $pointsDeduction = -20; //punishment 
 
 if ($daysLeft == $End) { // no days left on timer
-    $dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= :points + :pointsDeduction WHERE UserID=:UserID");
-  $dbParams = array(':points'=>$bpoints);
+    $dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= :points + :pointsDeduction WHERE UserID=:UserID");
+  $dbParams = array(':points'=>$spoints);
     $dbParams = array(':pointsDeduction'=>$pointsDeduction);
    $dbQuery->execute($dbParams);
 	$dbQuery = $conn->prepare("UPDATE FoodQuestionnaireResults SET Date = NOW() WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "<h4><center>Unfortunately, you have not completed the recipe in the completed time! A total of  - 20 points will be deducted</h4></center></h4>";
-	echo "<br><p>Want to try again? Come on .. you can do this! Click this button to start again <input type='submit' name='submit' value=' class='button-recipe' ></p>";
-	
-	}else {
+}else {
     // user not found - error handling here
 }
-
-
 
 // Define variables for points for days 1-7
 
@@ -236,7 +232,7 @@ $PointsD7+=5;
 // Completed in 1 day
 
 if (isset($_POST['submit']) && ($daysLeft == 7)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD1 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD1 WHERE UserID=:UserID");
       $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "<h4 class='success-text'>YAY! You have completed the recipe within 1 Day! You have earned a total of $PointsD1 points. Well done!</h4>";
@@ -246,7 +242,7 @@ if (isset($_POST['submit']) && ($daysLeft == 7)){
 
 // 2 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 6)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD2 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD2 WHERE UserID=:UserID");
      $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "<div class='success-text'>YAY! You have completed the recipe within 2 Days! You have earned a total of $PointsD2 points. Well done!";
@@ -255,7 +251,7 @@ if (isset($_POST['submit']) && ($daysLeft == 6)){
 }
 //3 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 5)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD3 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD3 WHERE UserID=:UserID");
      $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "YAY! You have completed the recipe within 3 Days! You have earned a total of $PointsD3 points. Well done!";
@@ -265,7 +261,7 @@ if (isset($_POST['submit']) && ($daysLeft == 5)){
 
 //4 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 4)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD4 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD4 WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "YAY! You have completed the recipe within 4 Days! You have earned a total of $PointsD4 points. Well done!";
@@ -275,7 +271,7 @@ if (isset($_POST['submit']) && ($daysLeft == 4)){
 
 //5 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 3)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD5 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD5 WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
     $dbQuery->execute($dbParams);
     echo "YAY! You have completed the recipe within 5 Days! You have earned a total of $PointsD5 points. Well done!";
@@ -284,7 +280,7 @@ if (isset($_POST['submit']) && ($daysLeft == 3)){
 }
 //6 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 2)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD6 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD6 WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
     $dbQuery->execute($dbParams);
     echo "YAY! You have completed the recipe within 6 Days! You have earned a total of $PointsD6 points. Well done!";
@@ -294,7 +290,7 @@ if (isset($_POST['submit']) && ($daysLeft == 2)){
 }
 //7 DAYS
 if (isset($_POST['submit']) && ($daysLeft == 1)){
-	$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints= $bpoints + $PointsD7 WHERE UserID=:UserID");
+	$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints= $spoints + $PointsD7 WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
     echo "YAY! You have completed the recipe within 7 Days! You have earned a total of $PointsD7 points. Well done!";
@@ -302,45 +298,42 @@ if (isset($_POST['submit']) && ($daysLeft == 1)){
     // user not found - error handling here
 }
 
-//define all keywords for breakfast
-$K1      = ("cheese");
-$K2      = ("yoghurt");
-$K3      = ("egg");
-$K4      = ("fruit");
-$K5      = ("cereal");
-$K6      = ("oatmeal");
-$K7      = ("granola");
-$K8      = ("bread");
-$K9      = ("avocado");
+//define all keywords for Snacks
+ $K1 = ("fruit");
+  $K2 = ("yoghurt");
+  $K3 = ("smoothie");
+  $K4 = ("crackers");
+  $K5 = ("nuts");
+  $K6 = ("biscuit");
 
-//define and get points and rewards for user
-$dbQuery = $conn->prepare("select BPoints, BreakfastReward from FoodPoints where UserID=:UserID");
+
+$dbQuery = $conn->prepare("select SPoints, SnacksReward from FoodPoints where UserID=:UserID");
 $dbParams = array(':UserID'=>$UserID);
  $dbQuery->execute($dbParams);
 $dbRow = $dbQuery->fetch(PDO::FETCH_ASSOC);
-    $bpoints          = $dbRow['BPoints'];
-	$breward         = $dbRow['BreakfastReward'];
-	//if user reaches 80 points - reward them
-	if ( $bpoints > 0 && ($bpoints >= 80) ){
+    $spoints          = $dbRow['SPoints'];
+	$sreward         = $dbRow['SnacksReward'];
+	
+	if ( $spoints > 0 && ($spoints >= 80) ){
 	echo '<h4 class="reward-text">Congratulations! You have reached 80 points! You will now be rewarded with an bonus recipe!!</h4>';
-$dbQuery = $conn->prepare("UPDATE FoodPoints SET BPoints = '0', BreakfastReward = BreakfastReward + 1 WHERE UserID=:UserID");
+$dbQuery = $conn->prepare("UPDATE FoodPoints SET SPoints = '0', SnacksReward = SnacksReward + 1 WHERE UserID=:UserID");
     $dbParams = array(':UserID'=>$UserID);
    $dbQuery->execute($dbParams);
 }
 
-$dbQuery = $conn->prepare("select BPoints, BreakfastReward from FoodPoints where UserID=:UserID");
+$dbQuery = $conn->prepare("select SPoints, SnacksReward from FoodPoints where UserID=:UserID");
 $dbParams = array(':UserID'=>$UserID);
  $dbQuery->execute($dbParams);
 $dbRow = $dbQuery->fetch(PDO::FETCH_ASSOC);
-    $bpoints          = $dbRow['BPoints'];
-	$breward         = $dbRow['BreakfastReward'];
+    $bpoints          = $dbRow['SPoints'];
+	$sreward         = $dbRow['SnacksReward'];
 
 echo"<h2 class='button-section-points'>";
 echo $_SESSION['currentUserForename'];   
 echo"'s Points: ".$bpoints." </h2>"; // Display user total points
-//adding extra reward recipe
-if ( $breward > 0 ){
-	$show =  3 + $breward;
+
+if ( $sreward > 0 ){
+	$show =  3 + $sreward;
    echo '<input type="hidden" value="'. $show .'" id="the_max">';
 } else {
 	echo '<input type="hidden" value="3" id="the_max">';
@@ -352,11 +345,14 @@ $dbQuery = $conn->prepare("SELECT * FROM FoodQuestionnaireResults where UserID=:
    $dbQuery->execute($dbParams);
 
  
+
+
+   
 while ($dbRow=$dbQuery->fetch(PDO::FETCH_ASSOC)) //loop through all keywords 1-9
 {
     for($number = 1; $number<=9; ++$number) {
-        $breakfast = "B$number";
-        $$breakfast = $dbRow[$breakfast]; //define row
+        $Snacks = "S$number";
+        $$Snacks = $dbRow[$Snacks]; //define row
     }
 }
 $cnt=0;
@@ -400,10 +396,10 @@ $max=3;
 		
 for($number = 1; $number<=9; ++$number) {
     $Keyword = "K$number"; //define keyword
-    $breakfast = "B$number"; //define lunch ID
-    if ($$breakfast == '1')  //whether the user selected the keyword. (1=True)
+    $Snacks = "S$number"; //define lunch ID
+    if ($$Snacks == '1')  //whether the user selected the keyword. (1=True)
     {
-        $dbQuery=$conn->prepare("select * from Recipes where RecipeCategory='Breakfast' AND Keyword = '".($$Keyword)."'"); //get all recipes where keyword = word user selected
+        $dbQuery=$conn->prepare("select * from Recipes where RecipeCategory='Snacks' AND Keyword = '".($$Keyword)."'"); //get all recipes where keyword = word user selected
         $dbQuery->execute();
 
 $Displayed=false;
@@ -420,7 +416,7 @@ while($dbRow=$dbQuery->fetch(PDO::FETCH_ASSOC)) {
 		
 		 echo '<div id="'.$dbRow["RecipeID"].'" data-finish="false" class="'.$class.'">
 		 <h4><div>'.$dbRow["RecipeName"].
-         '</div></h4><br><img src="Breakfast/'.$dbRow['RecipePicture'].'" width="150" height="150" />
+         '</div></h4><br><img src="Snacks/'.$dbRow['RecipePicture'].'" width="150" height="150" />
 			</b><br><br><p>'.$dbRow["RecipeInstructions"].'<br><br>
 			<form method="POST" action="">
 			<input type="hidden" name="RecipeID" value="'.$dbRow['RecipeID'].'">

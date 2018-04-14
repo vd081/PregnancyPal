@@ -1,8 +1,10 @@
 <?php
 session_start();
+include("dbConnect.php");
  if (isset($_SESSION["currentUser"])) { 
 		 $dbParams = array('userID'=>$_SESSION["currentUserForename"]);
 		  $dbParams = array('userID'=>$_SESSION["currentUserDueDate"]);
+		  
  }
   if (!isset($_SESSION["currentUser"])) 
      header("Location: login.php");
@@ -80,19 +82,38 @@ session_start();
 <?php if(isset($_GET['action']) && $_GET['action'] == 'joined'){
     						echo "<i><h2>Registration successful</h2>";
 }
+
+
+//GET TOTLA POINTS FOR USER - calculate then display ?!
 ?>
       <h1>Welcome to PregnancyPal  <?php echo $_SESSION["currentUserForename"]; ?></a></h1>
 	 
 
 	  </div>
+	   <? echo $_SESSION["currentUserLastActive"] ?> <br>
+
+
 	  <div class="box mar-right40">
+	
 	  <h2>Your amazing journey starts here.. </h2>
 <br></br>
 
-		<body><p> PregnancyPal information covers everything you need to know about having a safe and healthy pregnancy</p>
-      <br></br>  <p> Why not browse through our sections, with useful features you can use such as storing medical appointment and results and exercise and food reccomendations for you!</p>
-	<br></br>	<p>You'll get to see what's happening week by week with both you and your baby</p>
-		
+		<p>PregnancyPal information covers everything you need to know about having a safe and healthy pregnancy
+      <br></br><p>   Why not browse through our sections, with useful features you can use such as storing medical appointment and results and exercise and food reccomendations for you!
+	<br></br>	You'll get to see what's happening week by week with both you and your baby
+	<br><br></p>
+	<h2> Some key information about your journey here at PregnancyPal...<br>
+	<br></h2>
+		  <h4> You were last logged in at:
+<p>You last completed a Recipe:<br>
+You last completed an Exercise:<br><br>
+Your total points for Exercise:
+Your total points for Food:  <? echo $totalPoints?> <br>
+</p>
+
+Come on, why not go get some more points and gain some more new recipes and exercises to try! You can do it.
+</h4>
+<br>
 		</div>
     </body>
   <div class="banner"> <img src="images/banner.jpg" alt="banner.jpg"    />
